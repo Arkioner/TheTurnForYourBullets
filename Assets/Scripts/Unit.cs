@@ -9,12 +9,13 @@ public class Unit : MonoBehaviour
     private bool moveToTargetPosition = false;
     [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float stoppingDistance = 0.1f;
+    [SerializeField] private float stoppingDistance = 0.05f;
     [SerializeField] private float rotationSpeed = 10f;
 
     private void Start()
     {
         targetPosition = transform.position;
+        LevelGrid.SetUnitAtGridPosition(transform.position, this);
     }
 
     private void Update()
@@ -22,21 +23,33 @@ public class Unit : MonoBehaviour
         if (moveToTargetPosition)
         {
             Vector3 moveDirection = (targetPosition - transform.position).normalized;
-            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotationSpeed);
-            transform.position += moveDirection * (Time.deltaTime * moveSpeed);
-            if (Vector3.Distance(transform.position, targetPosition) < stoppingDistance)
+            if (Vector3.Distance(transform.forward, moveDirection) > stoppingDistance)
             {
-                transform.position = targetPosition;
-                moveToTargetPosition = false;
-                animator.SetBool(IsRunning, false);
+                transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotationSpeed);
+            }
+            else
+            {
+                animator.SetBool(IsRunning, true);
+                transform.position += moveDirection * (Time.deltaTime * moveSpeed);
+                if (Vector3.Distance(transform.position, targetPosition) < stoppingDistance)
+                {
+                    transform.position = targetPosition;
+                    moveToTargetPosition = false;
+                    animator.SetBool(IsRunning, false);
+                }
             }
         }
     }
 
     public void Move(Vector3 targetPosition)
     {
-        this.targetPosition = targetPosition;
-        moveToTargetPosition = true;
-        animator.SetBool(IsRunning, true);
+        if (LevelGrid.GetUnitAtGridPosition(targetPosition) == null)
+        {
+            LevelGrid.ClearUnitAtGridPosition(this.targetPosition);
+            LevelGrid.SetUnitAtGridPosition(targetPosition, this);
+            this.targetPosition = targetPosition;
+            moveToTargetPosition = true;
+            animator.SetBool(IsRunning, false);
+        }
     }
 }
