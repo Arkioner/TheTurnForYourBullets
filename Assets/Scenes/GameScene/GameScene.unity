@@ -1061,6 +1061,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396a90d6f3444764b9aa57a43073d1e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cmvCamera: {fileID: 1186760524}
+  minZoom: 1
+  maxZoom: 10
 --- !u!1001 &995465189986254097
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1123,11 +1126,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 995465188872310273, guid: dd78ffe5b2126b546be15d948c2b5af8,
-        type: 3}
-      propertyPath: stoppingDistance
-      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 995465188872310302, guid: dd78ffe5b2126b546be15d948c2b5af8,
         type: 3}
