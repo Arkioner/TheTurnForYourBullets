@@ -5,7 +5,7 @@ public class Unit : MonoBehaviour
     private static readonly int IsRunning = Animator.StringToHash("isRunning");
     [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float stoppingDistance = 0.05f;
+    [SerializeField] private float stoppingDistance = 0.10f;
     [SerializeField] private float rotationSpeed = 10f;
     private bool moveToTargetPosition;
     private Vector3 targetPosition;
