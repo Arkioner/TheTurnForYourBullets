@@ -1,14 +1,12 @@
 using System;
-using System.Timers;
-using TMPro;
 using UnityEngine;
 
 public class GridSystem
 {
-    private readonly int width;
-    private readonly int height;
     private readonly float cellSize;
     private readonly GridObject[,] gridObjects;
+    private readonly int height;
+    private readonly int width;
 
     public GridSystem(int width, int height, float cellSize)
     {
@@ -17,13 +15,11 @@ public class GridSystem
         this.cellSize = cellSize;
         gridObjects = new GridObject[width, height];
 
-        for (int x = 0; x < width; x++)
+        for (var x = 0; x < width; x++)
+        for (var z = 0; z < height; z++)
         {
-            for (int z = 0; z < height; z++)
-            {
-                GridPosition gp = new GridPosition(x, z);
-                gridObjects[x, z] = new GridObject(this, gp);
-            }
+            var gp = new GridPosition(x, z);
+            gridObjects[x, z] = new GridObject(this, gp);
         }
     }
 
@@ -62,9 +58,9 @@ public readonly struct GridPosition
 
 public class GridObject
 {
-    public Unit unit;
-    private readonly GridSystem gridSystem;
     private readonly GridPosition gridPosition;
+    private readonly GridSystem gridSystem;
+    public Unit unit;
 
     public GridObject(GridSystem gridSystem, GridPosition gridPosition)
     {

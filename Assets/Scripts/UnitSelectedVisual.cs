@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -6,11 +5,11 @@ public class UnitSelectedVisual : MonoBehaviour
 {
     [SerializeField] private Unit unit;
 
-    private MeshRenderer _meshRenderer;
+    private MeshRenderer meshRenderer;
 
     private void Awake()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer = GetComponent<MeshRenderer>();
         UnitActionSystem.SubscribeToUnitEvent(OnNewSelectedUnitEvent);
     }
 
@@ -23,14 +22,10 @@ public class UnitSelectedVisual : MonoBehaviour
     {
         if (unitEvent is UnitActionSystem.UnitEvent.NewSelectedUnitEvent)
         {
-            if (unitEvent.unit == this.unit)
-            {
-                _meshRenderer.enabled = true;
-            }
+            if (unitEvent.Unit == unit)
+                meshRenderer.enabled = true;
             else
-            {
-                _meshRenderer.enabled = false;
-            }
+                meshRenderer.enabled = false;
         }
     }
 }
