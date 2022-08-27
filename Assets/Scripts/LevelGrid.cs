@@ -14,8 +14,10 @@ public class LevelGrid : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        gridSystem = new GridSystem(10, 10, 2);
-        DrawGridDebug();
+        int width = 50;
+        int height = 50;
+        gridSystem = new GridSystem(width, height, 2);
+        DrawGridDebug(width, height);
     }
 
     private void Update()
@@ -23,35 +25,37 @@ public class LevelGrid : MonoBehaviour
         foreach (var action in debugQueue) action.Invoke();
     }
 
-    private void DrawGridDebug()
+    private void DrawGridDebug(int width, int height)
     {
-        for (var x = 0; x < 10; x++)
-        for (var z = 0; z < 10; z++)
+        for (var x = 0; x < width; x++)
+        for (var z = 0; z < height; z++)
         {
             var gridPosition = new GridPosition(x, z);
             var gridObject = gridSystem.GetGridObject(gridPosition);
             var debugInstance = Instantiate(gridDebugObjectPrefab, gridSystem.GetWorldPosition(gridPosition), Quaternion.identity);
             var debugText = debugInstance.GetComponentInChildren<TextMeshPro>();
-            var timer = new Timer(100);
-            timer.AutoReset = true;
-            timer.Elapsed += (_, _) => debugQueue.Enqueue(() => debugText.text = gridPosition + "\n" + gridObject.unit);
-            timer.Enabled = true;
+            debugInstance.gameObject.SetActive(false);
+            gridObject.SetDebugAction(() => debugQueue.Enqueue(() =>
+            {
+                debugInstance.gameObject.SetActive(gridObject.GetUnit() != null);
+                debugText.text = gridPosition + "\n" + gridObject.GetUnit();
+            }));
         }
     }
 
     public static void SetUnitAtGridPosition(Vector3 position, Unit unit)
     {
-        instance.gridSystem.GetGridObject(GetGridPosition(position)).unit = unit;
+        instance.gridSystem.GetGridObject(GetGridPosition(position)).SetUnit(unit);
     }
 
     public static Unit GetUnitAtGridPosition(Vector3 position)
     {
-        return instance.gridSystem.GetGridObject(GetGridPosition(position)).unit;
+        return instance.gridSystem.GetGridObject(GetGridPosition(position)).GetUnit();
     }
 
     public static void ClearUnitAtGridPosition(Vector3 position)
     {
-        instance.gridSystem.GetGridObject(GetGridPosition(position)).unit = null;
+        instance.gridSystem.GetGridObject(GetGridPosition(position)).SetUnit(null);
     }
 
     private static GridPosition GetGridPosition(Vector3 position)

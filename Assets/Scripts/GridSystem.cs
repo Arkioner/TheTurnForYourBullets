@@ -60,11 +60,28 @@ public class GridObject
 {
     private readonly GridPosition gridPosition;
     private readonly GridSystem gridSystem;
-    public Unit unit;
+    private Action debugAction;
+    private Unit unit;
 
     public GridObject(GridSystem gridSystem, GridPosition gridPosition)
     {
         this.gridSystem = gridSystem;
         this.gridPosition = gridPosition;
+    }
+
+    public void SetDebugAction(Action debugAction)
+    {
+        this.debugAction = debugAction;
+    }
+
+    public void SetUnit(Unit unit)
+    {
+        this.unit = unit;
+        debugAction?.Invoke();
+    }
+
+    public Unit GetUnit()
+    {
+        return this.unit;
     }
 }
